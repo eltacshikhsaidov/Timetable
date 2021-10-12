@@ -1,6 +1,8 @@
 package me.eltacshikhsaidov;
 
 import me.eltacshikhsaidov.external.beautifier.FlipTable;
+import me.eltacshikhsaidov.external.color.Colors;
+import me.eltacshikhsaidov.external.random.Generate;
 import me.eltacshikhsaidov.external.time.Time;
 
 import java.text.ParseException;
@@ -11,6 +13,16 @@ public class Main {
     public static void main(String[] args) throws ParseException {
 
         final int TIME_INTERVAL = 15;
+        final String[] WEEKDAYS = {
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+//                "Saturday",
+//                "Sunday"
+        };
+        int AREA;
 
         Scanner s = new Scanner(System.in);
 
@@ -38,7 +50,21 @@ public class Main {
         System.out.print("When the first plane starts its flight: ");
         String startTimeForFirstPlane = s.next();
         System.out.println("-----------------------------");
-        // row                    column
+
+        // get data for reaching hours for each city
+        String[][] arrivingHours = new String[number_of_airplanes][number_of_cities];
+        for (int i = 0; i < number_of_airplanes; i++) {
+            for (int j = 1; j < number_of_cities; j++) {
+                System.out.print("Enter arriving hour from " + cities[0] + " to " + cities[j] +
+                        " for " + airplanes[i] + ": ");
+                int minutes = s.nextInt() * 60; // converting hours to minutes automatically
+                arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL * i);
+                arrivingHours[i][j] = Time.add(arrivingHours[i][j - 1],
+                        minutes * 2 + Generate.random());
+            }
+        }
+
+
         String[][] time_table = new String[number_of_airplanes + 1][number_of_cities + 1];
 
         for (int row = 0; row < number_of_airplanes + 1; row++) {
@@ -46,51 +72,36 @@ public class Main {
                 if (row == 0 && column == 0) {
                     time_table[0][0] = " -- ";
                 } else if (column != 0 && row == 0) {
-                    time_table[0][column] = cities[column - 1]; // [0][1]=[0], [0][2]=[1], [0][3]=[2]
-                } else if (row != 0 && column == 0) {
-                    time_table[row][0] = airplanes[row - 1];
+                    time_table[0][column] = cities[column - 1].toUpperCase();
+                } else if (column == 0) {
+                    time_table[row][0] = airplanes[row - 1].toUpperCase();
                 } else {
-//                    time_table[row][column] = "a, t, w_d";
-                    String newTime = Time.add(startTimeForFirstPlane,
-                            TIME_INTERVAL * (row - 1));;
 
                     if ((row + column) % 2 == 0) {
-                        if (column == 1) {
-                            time_table[row][column] = "area: " + 1
-                                    + ", time: " + newTime
-                                    + ", week_day";
-                        } else {
-                            time_table[row][column] = "area: " + 1 + ", time, week_day";
-                        }
+                        AREA = 1;
                     } else {
-                        if (column == 1) {
-                            time_table[row][column] = "area: " + 1
-                                    + ", time: " + newTime
-                                    + ", week_day";
-                        } else {
-                            time_table[row][column] = "area: " + 2 + ", time, week_day";
-                        }
+                        AREA = 2;
                     }
+
+                    time_table[row][column] = "Area: "
+                            + AREA
+                            + ", Time: "
+                            + arrivingHours[row - 1][column - 1]
+                            + ", Week Day: "
+                            + Generate.weekDay(WEEKDAYS);
+
                 }
             }
         }
 
-        // Separating headers and data for beautifying
 
         String[] headers = new String[time_table[0].length];
-
         System.arraycopy(time_table[0], 0, headers, 0, time_table[0].length);
-
         String[][] data = new String[time_table.length - 1][time_table[0].length];
-
         for (int i = 1; i < time_table.length; i++) {
             System.arraycopy(time_table[i], 0, data[i - 1], 0, time_table[0].length);
         }
 
         System.out.println(FlipTable.of(headers, data));
-
-        // ----------------------------------------------------------------
-
-
     }
 }
