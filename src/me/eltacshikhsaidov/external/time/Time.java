@@ -16,4 +16,21 @@ public class Time {
 
         return dateFormat.format(calendar.getTime());
     }
+
+    public static boolean compare(String time1, String time2) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date date1 = dateFormat.parse(time1);
+        Date date2 = dateFormat.parse(time2);
+        //                                Monday  Monday Tuesday
+
+        int flag = date1.compareTo(date2);
+
+        return !(flag <= 0);
+    }
+
+    public static void main(String[] args) throws ParseException {
+        System.out.println(compare("10:00", "17:00"));
+    }
+
+
 }

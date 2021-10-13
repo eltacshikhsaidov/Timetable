@@ -1,7 +1,6 @@
 package me.eltacshikhsaidov;
 
 import me.eltacshikhsaidov.external.beautifier.FlipTable;
-import me.eltacshikhsaidov.external.color.Colors;
 import me.eltacshikhsaidov.external.random.Generate;
 import me.eltacshikhsaidov.external.time.Time;
 
@@ -19,9 +18,10 @@ public class Main {
                 "Wednesday",
                 "Thursday",
                 "Friday",
-//                "Saturday",
-//                "Sunday"
+                "Saturday",
+                "Sunday"
         };
+        int week_index = 0;
         int AREA;
 
         Scanner s = new Scanner(System.in);
@@ -52,6 +52,11 @@ public class Main {
         System.out.println("-----------------------------");
 
         // get data for reaching hours for each city
+
+        // get data for week days
+        String[][] weekDays = new String[number_of_airplanes][number_of_cities];
+        /////////////////////////
+
         String[][] arrivingHours = new String[number_of_airplanes][number_of_cities];
         for (int i = 0; i < number_of_airplanes; i++) {
             for (int j = 1; j < number_of_cities; j++) {
@@ -61,7 +66,21 @@ public class Main {
                 arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL * i);
                 arrivingHours[i][j] = Time.add(arrivingHours[i][j - 1],
                         minutes * 2 + Generate.random());
+                weekDays[i][0] = WEEKDAYS[0];// Monday 00:00 -> Tuesday 00:00 -> Wednesday
+                if (Time.compare(arrivingHours[i][j - 1], arrivingHours[i][j])) {
+                    week_index++;
+
+                    if (week_index >= 7) {
+                        week_index = 0;
+                    }
+                }
+
+
+                weekDays[i][j] = WEEKDAYS[week_index];
             }
+
+            week_index = 0;
+
         }
 
 
@@ -88,7 +107,7 @@ public class Main {
                             + ", Time: "
                             + arrivingHours[row - 1][column - 1]
                             + ", Week Day: "
-                            + Generate.weekDay(WEEKDAYS);
+                            + weekDays[row - 1][column - 1];
 
                 }
             }
