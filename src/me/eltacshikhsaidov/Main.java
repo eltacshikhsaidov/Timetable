@@ -68,13 +68,13 @@ public class Main {
                     if (i == 0) {
                         arrivingHours[i][0] = Time.add(startTimeForFirstPlane, 0);
                     } else {
-                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL * (i - 2));
+                        arrivingHours[i][0] = Time.add(arrivingHours[i - 2][0], TIME_INTERVAL);
                     }
                 } else {
-                    if (i==1) {
-                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL);
+                    if (i == 1) {
+                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, 0);
                     } else {
-                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL * (i - 2));
+                        arrivingHours[i][0] = Time.add(arrivingHours[i - 2][0], TIME_INTERVAL);
                     }
                 }
                 arrivingHours[i][j] = Time.add(arrivingHours[i][j - 1],
