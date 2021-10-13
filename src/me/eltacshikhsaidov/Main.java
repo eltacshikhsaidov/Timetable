@@ -68,7 +68,12 @@ public class Main {
                         minutes * 2 + Generate.random());
                 weekDays[i][0] = WEEKDAYS[0];// Monday 00:00 -> Tuesday 00:00 -> Wednesday
                 if (Time.compare(arrivingHours[i][j - 1], arrivingHours[i][j])) {
-                    week_index++;
+
+                    if ((minutes / 60) >= 12) {
+                        week_index += 2;
+                    } else {
+                        week_index++;
+                    }
 
                     if (week_index >= 7) {
                         week_index = 0;
