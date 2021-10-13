@@ -1,6 +1,7 @@
 package me.eltacshikhsaidov;
 
 import me.eltacshikhsaidov.external.beautifier.FlipTable;
+import me.eltacshikhsaidov.external.color.Colors;
 import me.eltacshikhsaidov.external.random.Generate;
 import me.eltacshikhsaidov.external.time.Time;
 
@@ -11,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) throws ParseException {
 
-        final int TIME_INTERVAL = 15;
+        final int TIME_INTERVAL = 15; // minutes
         final String[] WEEKDAYS = {
                 "Monday",
                 "Tuesday",
@@ -55,7 +56,6 @@ public class Main {
 
         // get data for week days
         String[][] weekDays = new String[number_of_airplanes][number_of_cities];
-        /////////////////////////
 
         String[][] arrivingHours = new String[number_of_airplanes][number_of_cities];
         for (int i = 0; i < number_of_airplanes; i++) {
@@ -63,20 +63,44 @@ public class Main {
                 System.out.print("Enter arriving hour from " + cities[0] + " to " + cities[j] +
                         " for " + airplanes[i] + ": ");
                 int minutes = s.nextInt() * 60; // converting hours to minutes automatically
-                arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL * i);
-                arrivingHours[i][j] = Time.add(arrivingHours[i][j - 1],
-                        minutes * 2 + Generate.random());
-                weekDays[i][0] = WEEKDAYS[0];// Monday 00:00 -> Tuesday 00:00 -> Wednesday
-                if (Time.compare(arrivingHours[i][j - 1], arrivingHours[i][j])) {
 
-                    if ((minutes / 60) >= 12) {
-                        week_index += 2;
+                if (i % 2 == 0) {
+                    if (i == 0) {
+                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, 0);
                     } else {
-                        week_index++;
+                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL * (i - 2));
                     }
+                } else {
+                    if (i==1) {
+                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL);
+                    } else {
+                        arrivingHours[i][0] = Time.add(startTimeForFirstPlane, TIME_INTERVAL * (i - 2));
+                    }
+                }
+                arrivingHours[i][j] = Time.add(arrivingHours[i][j - 1],
+                        2 * minutes + Generate.random()); // random generates between 30 - 90 minutes
+                weekDays[i][0] = WEEKDAYS[0];// Monday 00:00 -> Tuesday 00:00 -> Wednesday
 
+                if ((minutes / 60) < 12) {
+                    if (Time.compare(arrivingHours[i][j - 1], arrivingHours[i][j])) {
+
+                        week_index++;
+
+                        if (week_index >= 7) {
+                            week_index = 0;
+                            System.out.println(Colors.TEXT_RED +
+                                    "It is not possible to make all flights in the same week!"
+                                    + Colors.TEXT_RESET);
+                        }
+                    }
+                } else {
+                    week_index += 2;
                     if (week_index >= 7) {
                         week_index = 0;
+                        System.out.println(Colors.TEXT_RED +
+                                "It is not possible to make all flights in the same week!"
+                                + Colors.TEXT_RESET);
+
                     }
                 }
 

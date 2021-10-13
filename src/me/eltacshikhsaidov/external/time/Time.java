@@ -28,9 +28,5 @@ public class Time {
         return !(flag <= 0);
     }
 
-    public static void main(String[] args) throws ParseException {
-        System.out.println(compare("10:00", "17:00"));
-    }
-
 
 }
