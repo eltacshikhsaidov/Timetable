@@ -120,7 +120,11 @@ public class Main {
                 if (row == 0 && column == 0) {
                     time_table[0][0] = " -- ";
                 } else if (column != 0 && row == 0) {
-                    time_table[0][column] = cities[column - 1].toUpperCase();
+                    if (column == 1) {
+                        time_table[0][column] = cities[column - 1].toUpperCase();
+                    } else {
+                        time_table[0][column] = cities[column - 1].toUpperCase() + " to " + cities[0].toUpperCase();
+                    }
                 } else if (column == 0) {
                     time_table[row][0] = airplanes[row - 1].toUpperCase();
                 } else {
@@ -131,12 +135,21 @@ public class Main {
                         AREA = 2;
                     }
 
-                    time_table[row][column] = "Area: "
-                            + AREA
-                            + ", Time: "
-                            + arrivingHours[row - 1][column - 1]
-                            + ", Week Day: "
-                            + weekDays[row - 1][column - 1];
+                    if (column == 1) {
+                        time_table[row][column] = "Area: "
+                                + AREA
+                                + ", Flight time from Baku: "
+                                + arrivingHours[row - 1][column - 1]
+                                + ", Week Day: "
+                                + weekDays[row - 1][column - 1];
+                    } else {
+                        time_table[row][column] = "Area: "
+                                + AREA
+                                + ", Arriving time to Baku: "
+                                + arrivingHours[row - 1][column - 1]
+                                + ", Week Day: "
+                                + weekDays[row - 1][column - 1];
+                    }
 
                 }
             }
